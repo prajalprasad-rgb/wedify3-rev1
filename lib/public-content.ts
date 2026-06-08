@@ -60,6 +60,14 @@ function mediaUrl(media: MediaJoin) {
   return media?.public_url ?? null;
 }
 
+function imageUrlOrFallback(url: string | null | undefined, fallbackUrl: string) {
+  if (!url) return fallbackUrl;
+  if (/\.(avif|gif|jpe?g|png|webp)(\?|$)/i.test(url)) return url;
+  if (url.includes("/storage/v1/object/public/")) return url;
+  if (url.includes("images.unsplash.com")) return url;
+  return fallbackUrl;
+}
+
 export async function getPublicContent(): Promise<PublicContent> {
   const fallback: PublicContent = {
     settings: {
@@ -119,6 +127,9 @@ export async function getPublicContent(): Promise<PublicContent> {
       src: mediaUrl(item.media_assets) ?? fallback.gallery[0]?.src ?? siteConfig.heroVideo,
       category: item.category ?? "Gallery",
     }));
+    const firstGalleryImage =
+      liveGallery.find((item) => item.type === "image")?.src ??
+      fallback.gallery.find((item) => item.type === "image")?.src;
 
     const liveReels = ((reelsResponse.data ?? []) as unknown as ReelRow[]).map((item) => ({
       id: item.id,
@@ -126,6 +137,7 @@ export async function getPublicContent(): Promise<PublicContent> {
       type: "video" as const,
       src: mediaUrl(item.media_assets) ?? fallback.reels[0]?.src ?? siteConfig.heroVideo,
       category: item.caption ?? "Wedding Reel",
+      poster: firstGalleryImage,
     }));
 
     const liveBlogs = ((blogsResponse.data ?? []) as BlogRow[]).map((blog) => ({
@@ -147,7 +159,7 @@ export async function getPublicContent(): Promise<PublicContent> {
         title: demo.title,
         category: "Demo Website",
         description: demo.description ?? "",
-        coverImage: demo.cover_image_url ?? fallback.demos[0]?.coverImage,
+        coverImage: imageUrlOrFallback(demo.cover_image_url, fallback.demos[0]?.coverImage ?? siteConfig.heroVideo),
         demoUrl: demo.demo_url,
         featured: demo.is_featured,
       })),
