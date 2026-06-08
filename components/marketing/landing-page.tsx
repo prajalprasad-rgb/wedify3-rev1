@@ -223,20 +223,16 @@ export function LandingPage({ content }: { content?: PublicContent }) {
         <Section id="gallery" eyebrow="Gallery" title="Screenshots, mockups, previews, projects, and videos">
           <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
             {liveGallery.map((item, index) => (
-              <motion.button
+              <motion.article
                 key={item.id}
                 {...reveal}
-                type="button"
-                onClick={() => setActiveGallery(item.id)}
                 className="group mb-4 w-full break-inside-avoid overflow-hidden rounded-lg border border-white/10 bg-[#111111] text-left"
               >
                 {item.type === "video" ? (
                   <video
                     src={item.src}
-                    autoPlay
                     controls
                     muted
-                    loop
                     playsInline
                     preload="metadata"
                     poster={item.poster}
@@ -256,8 +252,11 @@ export function LandingPage({ content }: { content?: PublicContent }) {
                 <div className="p-4">
                   <p className="text-xs uppercase tracking-[0.18em] text-[#D4AF37]">{item.category}</p>
                   <p className="mt-2 text-sm text-white">{item.title}</p>
+                  <button type="button" onClick={() => setActiveGallery(item.id)} className="mt-4 rounded-full border border-[#D4AF37]/35 px-4 py-2 text-xs font-semibold text-[#E8C76A]">
+                    View
+                  </button>
                 </div>
-              </motion.button>
+              </motion.article>
             ))}
           </div>
         </Section>
@@ -265,20 +264,16 @@ export function LandingPage({ content }: { content?: PublicContent }) {
         <Section eyebrow="Wedding Reel Showcase" title="Short-form reels for cinematic event storytelling">
           <div className="flex gap-4 overflow-x-auto pb-4">
             {liveReels.map((item) => (
-              <motion.button
+              <motion.article
                 key={`reel-${item.id}`}
                 {...reveal}
-                type="button"
-                onClick={() => setActiveGallery(item.id)}
                 className="group relative h-[520px] min-w-[280px] overflow-hidden rounded-lg border border-white/10 bg-[#111111] text-left"
               >
                 {item.type === "video" ? (
                   <video
                     src={item.src}
-                    autoPlay
                     controls
                     muted
-                    loop
                     playsInline
                     preload="metadata"
                     poster={item.poster}
@@ -301,8 +296,11 @@ export function LandingPage({ content }: { content?: PublicContent }) {
                     <Video size={18} />
                   </div>
                   <p className="text-sm font-medium text-white">{item.title}</p>
+                  <button type="button" onClick={() => setActiveGallery(item.id)} className="mt-4 rounded-full border border-[#D4AF37]/45 bg-black/35 px-4 py-2 text-xs font-semibold text-[#E8C76A] backdrop-blur">
+                    Open Reel
+                  </button>
                 </div>
-              </motion.button>
+              </motion.article>
             ))}
           </div>
         </Section>
